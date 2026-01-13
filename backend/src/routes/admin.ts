@@ -13,7 +13,7 @@ import {
   getRevenueAnalytics,
   getNotifications,
 } from '../controllers/adminController';
-import { testEmail } from '../controllers/notificationController';
+import { testEmail, verifySmtp } from '../controllers/notificationController';
 import {
   listAdminSkills,
   createAdminSkill,
@@ -35,6 +35,8 @@ router.get('/notifications', authenticateToken, requireRole('admin'), getNotific
 
 // Send a test SMTP email (admin only)
 router.post('/notifications/test-email', authenticateToken, requireRole('admin'), testEmail);
+// Verify SMTP connection/auth (admin only)
+router.post('/notifications/verify-smtp', authenticateToken, requireRole('admin'), verifySmtp);
 
 // Existing endpoints
 router.get('/jobs/pending', authenticateToken, requireRole('admin'), listPendingJobs);

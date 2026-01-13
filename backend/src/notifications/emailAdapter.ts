@@ -15,3 +15,13 @@ export async function sendEmail(to: string, subject: string, text: string, html?
   const info = await transporter.sendMail({ from: process.env.SMTP_FROM || smtpUser, to, subject, text, html });
   return info;
 }
+
+export async function verifySMTP() {
+  if (!transporter) throw new Error('SMTP not configured');
+  return new Promise<boolean>((resolve, reject) => {
+    transporter!.verify((err, success) => {
+      if (err) return reject(err);
+      return resolve(!!success);
+    });
+  });
+}

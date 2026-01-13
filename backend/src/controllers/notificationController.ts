@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { enqueueNotification } from "../queues/notificationQueue";
 import { Application } from "../models/Application";
 import { User } from "../models/User";
-import { sendEmail } from "../notifications/emailAdapter";
+import { sendEmail, verifySMTP } from "../notifications/emailAdapter";
 import mongoose from "mongoose";
 
 export async function sendNotification(req: Request, res: Response) {
@@ -124,5 +124,15 @@ export async function testEmail(req: Request, res: Response) {
     return res.json({ ok: true, message: 'Test email sent' });
   } catch (err) {
     return res.status(500).json({ error: String(err) });
+  }
+}
+
+// Admin endpoint to verify SMTP connection/auth without sending
+export async function verifySmtp(req: Request, res: Response) {
+  try {
+    const ok = await verifySMTP();
+    return res.json({ ok: true, verified: !!ok });
+  } catch (err) {
+    return res.status(500).json({ ok: false, error: String(err) });
   }
 }
